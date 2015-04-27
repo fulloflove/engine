@@ -1,0 +1,32 @@
+{% load i18n %}
+{% for group, values in groups.items %}
+
+<li {% if active_nav == group %} class="active" {% endif %}>
+	<a data-toggle="collapse" data-target="#{{ group }}" aria-expanded="false" aria-controls="{{ group }}" href="#">По
+		{% if group == 'project' %}проекту
+		{% elif group == 'region' %}региону
+		{% elif group == 'service_type' %}типу
+		{% elif group == 'user' %}исполнителю
+		{% endif %}
+		<div class="caret"></div>
+	</a>
+	<div role="tabpanel" id="{{ group }}" class="collapse{% if active_nav = group %} in{% endif %}">
+		<div class="well">
+			<div class="input-group">
+				<select class="form-control input-sm quick_filter" name="{{ group }}">
+					{% if active_nav != group %}<option disabled selected>Выберите</option>{% endif %}
+					{% for item in values %}
+						<option {% if item == active_item %}selected="selected" {% endif %}value="{{ item.id }}">
+							{% if group == 'user' %}{{ item.last_name }} {{ item.first_name }}
+							{% else %}{{ item }}
+								{% if group == 'region' %} ({{ item.region_id }}) {% endif %}
+							{% endif %}
+						</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+	</div>
+</li>
+
+{% endfor %}

@@ -1,0 +1,55 @@
+<ul class="nav nav-tabs">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Открытые</a></li>
+    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Закрытые</a></li>
+    <li class="dropdown active" role="presentation">
+        <a aria-expanded="false" href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown" aria-controls="myTabDrop1-contents">Все
+            <div class="caret"></div>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1" id="myTabDrop1-contents">
+          <li><a aria-expanded="false" href="#dropdown1" tabindex="-1" role="tab" id="dropdown1-tab" data-toggle="tab" aria-controls="dropdown1">За месяц</a></li>
+          <li><a aria-expanded="true" href="#dropdown2" tabindex="-1" role="tab" id="dropdown2-tab" data-toggle="tab" aria-controls="dropdown2">За квартал</a></li>
+        </ul>
+    </li>
+</ul>
+<br />
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active fade in" id="home">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Регион</th>
+                    <th></th>
+                    <th>Тема</th>
+                    <th>Создан</th>
+                    <th>Статус</th>
+                    <th>User</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in issues %}
+                    {% if item.status.id == 3 %}<tr class="success">
+                    {% elif item.status.id == 1 %}<tr class="warning">
+                    {% else %}<tr>
+                    {% endif %}
+                        <td>
+                            <div style="{% if item.priority.id == 2 %}color: #A94442;{% else %}color: #3C763D;{% endif %}">
+                                <span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true"></span>
+                            </div>
+
+                        </td>
+                        <td>{{ item.region.name_short }}</td>
+                        <td><span class="label label-default">{{ item.service_type.name_short }}</span></td>
+                        <td><a href="#" >{{ item.subject }}</a></td>
+                        <td>{{ item.created.date|date:"d.m.Y" }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>{{ item.assignee.last_name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="profile">123</div>
+    <div role="tabpanel" class="tab-pane fade" id="messages">321</div>
+</div>

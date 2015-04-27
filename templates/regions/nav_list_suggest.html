@@ -1,0 +1,9 @@
+<ul class="nav nav-sidebar">
+    {% if regions %}
+        {% for region in regions %}
+            <li>
+                <a href="{% url 'regions:detail' region.id %}"><span class="badge">{{ region.region_id }}</span> {{ region }}</a>
+            </li>
+        {% endfor %}
+    {% endif %}
+</ul>

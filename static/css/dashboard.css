@@ -1,0 +1,158 @@
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+}
+
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+  border: 0;
+}
+
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+.sidebar {
+  display: none;
+}
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+  }
+}
+
+/* Sidebar navigation */
+.nav-sidebar-group {
+  padding: 10px 15px;
+  background-color: #fff;
+}
+.nav-sidebar-group > li > a {
+  padding-left: 10px;
+}
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+.nav-sidebar > .active > a,
+.nav-sidebar-group > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar-group > .active > a:hover,
+.nav-sidebar > .active > a:focus,
+.nav-sidebar-group > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+}
+.nav-sidebar > .cat > a,
+.nav-sidebar > .cat > a:hover,
+.nav-sidebar > .cat > a:focus {
+  background-color: #e6e6e6;
+}
+
+.nav-sidebar-group > li > a {
+  padding: 5px 5px 5px 10px;
+}
+
+.dot {
+  border-bottom-width: 1px;
+  border-bottom-style: dotted;
+  cursor: pointer;
+}
+
+
+/*
+ * Main content
+ */
+
+.main {
+  padding: 20px;
+}
+@media (min-width: 768px) {
+  .main {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}
+.main .page-header {
+  margin-top: 0;
+}
+
+
+/*
+ * Placeholder dashboard ideas
+ */
+
+.placeholders {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.placeholders h4 {
+  margin-bottom: 0;
+}
+.placeholder {
+  margin-bottom: 20px;
+}
+.placeholder img {
+  display: inline-block;
+  border-radius: 50%;
+}
+
+#map-canvas, #ymap {
+  height: 700px;
+  width: 100%;
+}
+
+.errorlist {
+  list-style: none;
+  padding-left: 0;
+  color: #a94442;
+}
+
+.issue-table {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.legend {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  margin-bottom: 12px;
+}
+
+.xs-pale {
+  font-size: 80%;
+  color: #777;
+}
+

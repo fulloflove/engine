@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    {% load staticfiles %}
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet" media="screen">
+        <link href="{% static "css/dashboard.css" %}" rel="stylesheet" media="screen">
+		<link href="{% static "css/datepicker3.css" %}" rel="stylesheet" media="screen">
+
+
+        <title>HelpDesk{% block title %}{% endblock %}</title>
+	</head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'helpdesk:index' %}">
+						<span class="text-danger glyphicon glyphicon-fire"></span>
+						HelpDesk
+						<span class="text-danger">&beta;eta</span>
+					</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{% url 'helpdesk:index' %}">Запросы</a></li>
+                        <li><a href="{% url 'regions:index' %}">Регионы</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="dropdown">
+                            <a id="drop" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                                Привет, {{ user.first_name }}
+                                <div class="caret"></div>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="drop">
+                        		<li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'helpdesk:edit_account' %}">Ваши данные</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'helpdesk:change_password' %}">Сменить пароль</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'helpdesk:logout' %}">Выход</a></li>
+                            </ul>
+
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'helpdesk:login' %}">Вход</a></li>
+                    {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    {% block side_block %}
+                    {% endblock %}
+                 </div>
+
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <div class="pull-right">
+							{% block header_right_block %}{% endblock %}
+					</div>
+					<div class="page-header">
+                        {% block header_block %}{% endblock %}
+                    </div>
+                    <div>
+                        {% block body_block %}{% endblock %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src='{% static "js/bootstrap.min.js" %}'></script>
+
+
+		{% block include_block %}{% endblock %}
+
+		<script src="{% static "js/bootstrap-datepicker.js" %}"></script>
+		<script src="{% static "js/locales/bootstrap-datepicker.ru.js" %}" charset="utf-8"></script>
+		<script src="{% static "js/jquery.autosize.min.js" %}"></script>
+		<script src="{% static "js/helpdesk.js" %}"></script>
+
+
+    </body>
+</html>

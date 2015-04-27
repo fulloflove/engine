@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% load quick_filter_tag %}
+
+{% block title %}. Index{% endblock %}
+
+{% block header_block %}{% endblock %}
+
+{% block side_block %}
+    <ul class="nav nav-sidebar">
+        <li{% if active_nav = 'my' %} class="active" {% endif %}><a href="{% url 'helpdesk:my' %}">Мои запросы</a></li>
+        <li{% if active_nav = 'all' %} class="active" {% endif %}><a href="{% url 'helpdesk:all' %}">Все запросы</a></li>
+
+		{% quick_filter_menu active_nav active_item %}
+
+    </ul>
+{% endblock %}
+
+{% block header_right_block %}
+	<a class="btn btn-primary" href="{% url 'helpdesk:new_issue' %}">
+		<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+		<span class="sr-only">Создать</span>
+		Создать новый запрос
+	</a>
+	<a class="btn btn-primary" href="{% url 'helpdesk:filter' %}">
+		<span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+		<span class="sr-only">Фильтр</span>
+	</a>
+	<a class="btn btn-primary" href="{% url 'search:haystack_search' %}">
+		<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+		<span class="sr-only">Поиск</span>
+	</a>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}. Регионы{% endblock %}
+
+{% block side_block %}
+	<small>
+    <ul class="nav nav-list">
+        <li class="nav-header"></li>
+        <form>
+            <li><input class="search-query span10" type="text" name="suggestion" value="" id="suggestion" placeholder=" Начните вводить имя"/></li>
+        </form>
+    </ul>
+
+    <div id="suggest_region"></div>
+
+    <hr />
+
+    {% load nav_list_tag %}
+    {% regions_list region %}
+	</small>
+{% endblock %}
+
+
+{% block header_block %}<h3>Регионы</h3>{% endblock %}
+
+
+{% block body_block %}<div id="ymap"></div>{% endblock %}
+
+
+{% block include_block %}
+		<script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+        <script src="{% static "js/ymap.js" %}"></script>
+
+        <script src="{% static "js/regions-ajax.js" %}"></script>
+{% endblock %}

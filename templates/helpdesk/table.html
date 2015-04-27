@@ -1,0 +1,43 @@
+{% if issues %}
+
+<table class="table table-hover">
+    <thead class="issue-table">
+        <tr>
+			<th></th>
+            <th>Номер</th>
+            <th>Регион</th>
+            <th>Тип</th>
+            <th>Тема</th>
+            <th>Контроль</th>
+            <th>Статус</th>
+            <th>Исполнитель</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in issues %}
+            {% if item.status.id == 4 %}<tr class="success">
+            {% elif item.status.id != 4 and item.expires %}<tr class="warning">
+            {% elif item.status.id != 4 and item.expired %}<tr class="danger">
+            {% else %}<tr>
+            {% endif %}
+                <td>
+					<span class="glyphicon glyphicon-circle-arrow-up
+					{% if item.priority.id == 1 %} text-danger
+					{% elif item.priority.id == 2 %} text-warning
+					{% else %} text-success{% endif %}" aria-hidden="true">
+					</span>
+                </td>
+				<td class="text-nowrap">{{ item.issue_id }}<br /><span class="xs-pale">{{ item.external_id }}</span></td>
+                <td>{{ item.region.name_short }}</td>
+                <td><span class="label label-default">{{ item.service_type.name_short }}</span></td>
+                <td><a href="{% url 'helpdesk:issue' item.id %}">{{ item.subject }}</a></td>
+                <td>{{ item.control|date:"d.m.Y" }}</td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.assignee.last_name }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endif %}

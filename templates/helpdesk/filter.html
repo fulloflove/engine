@@ -1,0 +1,145 @@
+{% extends 'helpdesk/helpdesk_base.html' %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% block title %}. Фильтр{% endblock %}
+
+{% block header_block %}<h3>Фильтр</h3>{% endblock %}
+
+{% block body_block %}
+	<form action="." method="get">
+	<div class="panel panel-default">
+		<div class="panel-heading" role="tab" id="headingOne">
+			<h4 class="panel-title">
+				<a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Условия поиска
+					<small><span class="glyphicon glyphicon glyphicon-menu-down" aria-hidden="true"></span></small>
+				</a>
+			</h4>
+		</div>
+		<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+			<div class="panel-body">
+				<div class="col-md-12">
+					<div class="form-horizontal">
+						<div class="form-group">
+							<div class="col-md-4 col-md-offset-1">
+								<div class="input-group input-group-sm">
+									<span class="input-group-addon">Дата создания с:</span>
+									{% render_field filter_form.created_start class="form-control datepicker" %}
+									<span class="input-group-addon">по:</span>
+									{% render_field filter_form.created_end class="form-control datepicker" %}
+								</div>
+								{{ filter_form.non_field_errors }}
+							</div>
+							<div class="col-md-4 col-md-offset-1">
+									<div class="input-group input-group-sm">
+										<span class="input-group-addon">Дата контроля с:</span>
+										{% render_field filter_form.control_start class="form-control datepicker" %}
+										<span class="input-group-addon">по:</span>
+										{% render_field filter_form.control_end class="form-control datepicker" %}
+									</div>
+									{{ filter_form.non_field_errors }}
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-4">
+								<div class="control-label col-md-4">
+									{{ filter_form.project.label_tag }}
+								</div>
+								<div class="col-md-8">
+									{% render_field filter_form.project class="form-control" %}
+									{{ filter_form.project.errors }}
+								</div>
+							</div>
+							<div class="col-md-5">
+								<div class="control-label col-md-2">
+									{{ filter_form.service_type.label_tag }}
+								</div>
+								<div class="col-md-10">
+									{% render_field filter_form.service_type class="form-control" %}
+									{{ filter_form.service_type.errors }}
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="control-label col-md-4">
+									{{ filter_form.status.label_tag }}
+								</div>
+								<div class="col-md-8">
+									{% render_field filter_form.status class="form-control" %}
+									{{ filter_form.status.errors }}
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-4">
+								<div class="control-label col-md-4">
+									{{ filter_form.priority.label_tag }}
+								</div>
+								<div class="col-md-8">
+									{% render_field filter_form.priority class="form-control" %}
+									{{ filter_form.priority.errors }}
+								</div>
+							</div>
+							<div class="col-md-5">
+								<div class="control-label col-md-2">
+									{{ filter_form.region.label_tag }}
+								</div>
+								<div class="col-md-10">
+									{% render_field filter_form.region class="form-control" %}
+									{{ filter_form.region.errors }}
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="control-label col-md-4">
+									{{ filter_form.source.label_tag }}
+								</div>
+								<div class="col-md-8">
+									{% render_field filter_form.source class="form-control" %}
+									{{ filter_form.source.errors }}
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-4">
+								<div class="control-label col-md-4">
+									{{ filter_form.assignee.label_tag }}
+								</div>
+								<div class="col-md-8">
+									{% render_field filter_form.assignee class="form-control" %}
+									{{ filter_form.assignee.errors }}
+								</div>
+							</div>
+							<div class="col-md-5">
+								<div class="control-label col-md-2">
+									{{ filter_form.creator.label_tag }}
+								</div>
+								<div class="col-md-10">
+									{% render_field filter_form.creator class="form-control" %}
+									{{ filter_form.creator.errors }}
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="control-label col-md-4">
+									{{ filter_form.component.label_tag }}
+								</div>
+								<div class="col-md-8">
+									{% render_field filter_form.component class="form-control" %}
+									{{ filter_form.component.errors }}
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<hr />
+				</div>
+				<hr />
+				<div class="col-md-4">
+					<button class="btn btn-primary" disabled="disabled" type="submit" name="search">Выполнить поиск</button>
+					<button class="btn btn-default" disabled="disabled">Сохранить запрос</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+{% endblock %}

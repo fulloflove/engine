@@ -1,0 +1,82 @@
+{% extends 'regions/index.html' %}
+
+{% load staticfiles %}
+
+{% block title %}. Регионы. {{ region }} {% endblock %}
+
+{% block header_block %} <h3>{{ region }}</h3> {% endblock %}
+
+{% block body_block %}
+
+<!-- Modal -->
+{% include "regions/contact_form_modal.html" %}
+<!-- end of Modal -->
+
+
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+<div class="panel panel-default">
+	<div class="panel-heading" role="tab" id="headingOne">
+		<h4 class="panel-title">
+			<a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Контакты
+				<small><span class="glyphicon glyphicon glyphicon-menu-down" aria-hidden="true"></span></small>
+			</a>
+		</h4>
+	</div>
+	<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+		<div class="panel-body">
+			{% if contact_list %}
+			<table class="table table-hover">
+				<thead class="issue-table">
+					<tr>
+						<th>Ф.И.О.</th>
+						<th>Телефон</th>
+						<th>E-mail</th>
+						<th>Должность</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in contact_list %}
+						<tr>
+							<td class="text-nowrap">{{ item.name }}</td>
+							<td class="text-nowrap">{{ item.phone }}</td>
+							<td>
+								{% for email in item.emails_as_list %}
+									<a href="mailto:{{ email }}">{{ email }}</a>
+								{% endfor %}
+							</td>
+							<td>{{ item.job }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}Сохраненных контактов нет
+			{% endif %}
+			<hr />
+			{% if contact_form.errors %}<p class="text-danger">Данные заполнены некорректно. Попробуйте еще раз.</p>{% endif %}
+			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newContact">
+				<span class="glyphicon glyphicon-plus"></span> Новый контакт </button>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading" role="tab" id="headingTwo">
+		<h4 class="panel-title">
+			<a data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Последние запросы
+				<small><span class="glyphicon glyphicon glyphicon-menu-down" aria-hidden="true"></span></small>
+			</a>
+		</h4>
+	</div>
+	<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+			{% if last_issues %}
+				{% include "helpdesk/table.html" with issues=last_issues %}
+			{% endif %}
+			<div class="panel-body">
+				{% if not last_issues %}Запросы не найдены. {% endif %}
+				<a href="{% url 'helpdesk:region_open' region.id %}">Все запросы</a>
+			</div>
+	</div>
+</div>
+{% endblock %}

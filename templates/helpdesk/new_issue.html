@@ -1,0 +1,251 @@
+{% extends 'helpdesk/helpdesk_base.html' %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+	{% if current_issue %}
+		Редактирование запроса {{ current_issue.issue_id }}
+	{% else %}
+		Новый запрос
+	{% endif %}
+{% endblock %}
+
+{% block header_block %}
+	{% if current_issue %}
+		<h3>Редактирование запроса {{ current_issue.issue_id }}</h3>
+	{% else %}
+		<h3>Новый запрос</h3>
+	{% endif %}
+{% endblock %}
+
+{% block body_block %}
+
+	<form action="." method="post">
+	{% csrf_token %}
+
+	<!-- Modal -->
+		{% include "helpdesk/contact_form_modal.html" %}
+	<!-- end of Modal -->
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+			<div class="panel-body">
+			<div class="col-md-12">
+
+				{% for hidden in form.hidden_fields %}
+					{{ hidden }}
+					{{ hidden.errors }}
+				{% endfor %}
+
+				{% for error in form.non_field_errors %}
+				<div class="alert alert-warning" role="alert">
+					<span class="glyphicon glyphicon-exclamation-sign"></span>
+					{{ error }}
+				</div>
+				{% endfor %}
+
+				<div class="form-horizontal">
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.project.label_tag }}
+						</div>
+						<div class="col-md-2">
+							{% render_field form.project class="form-control" %}
+							{{ form.project.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.service_type.label_tag }}
+						</div>
+						<div class="col-md-4">
+							{% render_field form.service_type class="form-control" %}
+							{{ form.service_type.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label text-danger">
+							{{ form.subject.label_tag }}
+						</div>
+						<div class="col-md-10">
+							{% render_field form.subject class="form-control" %}
+							{{ form.subject.errors }}
+						</div>
+					</div>
+					<hr />
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.external_id.label_tag }}
+						</div>
+						<div class="col-md-4">
+							{% render_field form.external_id class="form-control" %}
+							{{ form.external_id.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.source.label_tag }}
+						</div>
+						<div class="col-md-2">
+							{% render_field form.source class="form-control" %}
+							{{ form.source.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.status.label_tag }}
+						</div>
+						<div class="col-md-2">
+							{% render_field form.status class="form-control" %}
+							{{ form.status.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.priority.label_tag }}
+						</div>
+						<div class="col-md-2">
+							{% render_field form.priority class="form-control" %}
+							{{ form.priority.errors }}
+						</div>
+					</div>
+					<hr />
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.component.label_tag }}
+						</div>
+						<div class="col-md-2">
+							{% render_field form.component class="form-control" %}
+							{{ form.component.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label text-danger">
+							{{ form.region.label_tag }}
+						</div>
+						<div class="col-md-4">
+							{% render_field form.region class="form-control" %}
+							{{ form.region.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.contact.label_tag }}
+						</div>
+						<div class="col-md-10">
+							{{ form.contact.errors }}
+							<div class="form-control-static">
+								<span id="contact_name">
+									{% if created_contact %} {{ created_contact.name }}
+									{% elif form.contact.value %}{{ form.instance.contact.name }}
+									{% else %}---------
+									{% endif %}
+								</span>
+								<a href="#" class="glyphicon glyphicon-remove {% if not form.contact.value %}hidden{% endif %}" id="clear_contact"></a>
+							</div>
+
+
+
+							<a tabindex="0" data-target="{% url 'helpdesk:popover' %}" class="btn btn-primary btn-sm popup-ajax">Выбрать <span class="glyphicon glyphicon-list"></span></a>
+
+							<button type="button" class="btn btn-primary btn-sm" id="contact_form_modal">Создать <span class="glyphicon glyphicon-plus"></span></button>
+							{% if contact_form.errors %}<span class="glyphicon glyphicon-exclamation-sign text-danger"></span><span class="text-danger"> Данные заполнены некорректно. Попробуйте еще раз.</span>{% endif %}
+							<span class="text-danger hidden" id="choose_initiator"><span class="glyphicon glyphicon-exclamation-sign"></span> Необходимо выбрать инициатора</span>
+
+						</div>
+					</div>
+
+					<hr />
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.description.label_tag }}
+						</div>
+						<div class="col-md-10">
+							{% render_field form.description class="form-control autosizeable" placeholder=form.description.help_text %}
+							{{ form.description.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label text-danger">
+							{{ form.control.label_tag }}
+						</div>
+						<div class="col-md-2">
+							{% render_field form.control class="form-control datepicker" %}
+							{{ form.control.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.assignee.label_tag }}
+						</div>
+						<div class="col-md-3">
+							{% render_field form.assignee class="form-control" %}
+							{{ form.assignee.errors }}
+						</div>
+					</div>
+					<hr />
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.contracts.label_tag }}
+						</div>
+						<div class="col-md-10">
+							{% for contract in form.contracts %}
+								<label for="{{ contract.id_for_label }}" class="checkbox-inline">
+									{{ contract.tag }}{{ contract.choice_label }}
+								</label>
+							{% endfor %}
+							{{ form.report_description.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.report_description.label_tag }}
+						</div>
+						<div class="col-md-10">
+							{% render_field form.report_description class="form-control autosizeable" placeholder=form.report_description.help_text %}
+							{{ form.report_description.errors }}
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-2 control-label">
+							{{ form.report_solution.label_tag }}
+						</div>
+						<div class="col-md-10">
+							{% render_field form.report_solution class="form-control autosizeable" placeholder=form.report_solution.help_text %}
+							{{ form.report_solution.errors }}
+							<div class="checkbox">
+								<label>
+									{{ form.formed }} {{ form.formed.help_text }}
+								</label>
+								{{ form.formed.errors }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr />
+
+
+			{% if current_issue %}
+				<div class="pull-right">
+					<a class="btn btn-danger" href="{% url 'helpdesk:issue' current_issue.id %}">Отменить</a>
+				</div>
+			{% endif %}
+
+			<div class="form-inline form-group col-md-6 col-md-offset-2">
+				<button class="btn btn-primary" type="submit" name="new_issue">Сохранить</button>
+				<button class="btn btn-default" type="submit" name="continue_editing">Сохранить и редактировать</button>
+			</div>
+
+
+			</div>
+			</div>
+			</div>
+		</div>
+
+	</div>
+</form>
+
+{% endblock %}

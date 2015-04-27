@@ -1,0 +1,94 @@
+{% extends 'helpdesk/helpdesk_base.html' %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% block title %}. Запросы{% endblock %}
+
+{% block header_block %}
+	{% if active_nav == 'my' %}<h3>Мои запросы</h3>
+	{% elif active_nav == 'all' %}<h3>Все запросы</h3>
+	{% else %}<h3>Запросы по
+		{% if active_nav == 'region' %}региону{% elif active_nav == 'project' %}проекту{% elif active_nav == 'service_type' %}типу{% else %}исполнителю{% endif %}:
+	{% if active_nav == 'user' %}{{ active_item.last_name }}{{ active_item.first_name }}
+	{% elif active_nav == 'region' %}<a href="{% url 'regions:detail' active_item.id %}">{{ active_item }}</a>
+	{% else %}{{ active_item }}{% endif %}</h3>
+	{% endif %}
+{% endblock %}
+
+{% block body_block %}
+
+	<ul class="nav nav-tabs">
+		<li role="presentation"{% if status == "open" %} class="active"{% endif %}>
+			<a href="{% url 'helpdesk:index' %}{{ active_nav }}{% if active_nav != 'all' and active_nav != 'my' %}/{{ active_item.id }}{% endif %}">Открытые</a></li>
+
+		<li role="presentation" class="dropdown{% if status == "closed" %} active{% endif %}">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#!" role="button" aria-expanded="false">
+				Закрытые <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu" role="menu">
+				<li><a href="{% url 'helpdesk:index' %}{{ active_nav }}{% if active_nav != 'all' and active_nav != 'my' %}/{{ active_item.id }}{% endif %}/closed">Списком</a></li>
+				<li><a href="{% url 'helpdesk:index' %}{{ active_nav }}{% if active_nav != 'all' and active_nav != 'my' %}/{{ active_item.id }}{% endif %}/closed/period">За период</a></li>
+			</ul>
+		</li>
+	</ul>
+    <!--<ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#open" aria-controls="open" role="tab" data-toggle="tab">Открытые</a></li>
+        <li role="presentation"><a href="#closed" aria-controls="closed" role="tab" data-toggle="tab">Закрытые</a></li>
+    </ul>-->
+    <br />
+
+    <div class="tab-content">
+            {% if period_form %}
+				<div class="row">
+					<div class="col-md-5">
+						<form action="." method="get" class="form-inline">
+							<div class="input-group input-group-sm">
+								<span class="input-group-addon">Начало:</span>
+								{% render_field period_form.start class="form-control datepicker" %}
+								<span class="input-group-addon">Конец:</span>
+								{% render_field period_form.end class="form-control datepicker" %}
+								<span class="input-group-btn">
+									<button class="btn btn-primary" type="submit" name="period_form">Ok</button>
+								</span>
+							</div>
+							{{ period_form.non_field_errors }}
+						</form>
+					</div>
+
+				</div>
+				<br />
+			{% endif %}
+			{% if issues %}
+				<div class="panel panel-default">
+					{% if title %}
+						<div class="panel-heading">
+							{{ title }}
+							<div class="pull-right">
+								<a tabindex="0" data-toggle="popover" data-trigger="focus" data-placement="left" data-html="true"
+								   title="Обозначение строк в таблице"
+								   data-content="
+									   <div class='alert alert-warning legend' role='alert'>Истекает срок контроля</div>
+									   <div class='alert alert-danger legend' role='alert'>Срок контроля истек</div>
+									   <div class='alert alert-success legend' role='alert'>Закрытые запросы</div>
+									">
+									<span class="glyphicon glyphicon-question-sign text-primary" id="legend"></span>
+								</a>
+							</div>
+						</div>
+					{% endif %}
+					<div class="col-md-12">
+						{% include "helpdesk/paginator.html" with list=issues %}
+					</div>
+					{% include "helpdesk/table.html" %}
+				</div>
+
+					{% elif status == "open" %}<h4>Открытых запросов нет</h4>
+					{% elif status == "closed" and period_form.is_bound and not period_form.errors %}<h4>Ничего не найдено</h4>
+					{% elif status == "closed" and not period_form %}<h4>Закрытых запросов нет</h4>
+
+			{% endif %}
+    </div>
+
+{% endblock %}

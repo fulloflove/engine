@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}. Редактирование данных пользователя{% endblock %}
+
+{% block header_block %}<h3>Редактирование данных пользователя</h3>{% endblock %}
+
+{% block body_block %}
+
+{% load widget_tweaks %}
+
+	{% if success %}
+		<div class="row">
+			<div class="col-md-5">
+				<div class="alert alert-success" role="alert">
+					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+					Данные успешно сохранены
+				</div>
+			</div>
+		</div>
+	{% endif %}
+
+		<form class="form-horizontal" role="form" method="post" action="{% url 'helpdesk:edit_account' %}">
+			{% csrf_token %}
+			<div class="form-group">
+				<div class="col-sm-2 control-label">
+					{{ user_form.username.label_tag }}
+				</div>
+				<div class="col-md-3">
+					{% render_field user_form.username class="form-control" placeholder="Введите имя пользователя" %}
+					{{ user_form.username.errors }}
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">
+					{{ user_form.first_name.label_tag }}
+				</div>
+				<div class="col-md-3">
+					{% render_field user_form.first_name class="form-control" placeholder="Введите свое имя"%}
+					{{ user_form.first_name.errors }}
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">
+					{{ user_form.last_name.label_tag }}
+				</div>
+				<div class="col-md-3">
+					{% render_field user_form.last_name class="form-control" placeholder="Введите свою фамилию" %}
+					{{ user_form.last_name.errors }}
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">
+					{{ user_form.email.label_tag }}
+				</div>
+				<div class="col-md-3">
+					{% render_field user_form.email class="form-control" placeholder="Электронная почта" %}
+					{{ user_form.email.errors }}
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-md-offset-2 col-md-2">
+					<button type="submit" class="btn btn-primary">Сохранить</button>
+				</div>
+			</div>
+
+		</form>
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% if list.paginator.num_pages > 1 %}
+	<nav>
+		<ul class="pagination pagination-sm">
+
+				{% if list.has_previous %}
+					<li>
+						<a aria-label="Previous" href="?{% if queries %}{{queries.urlencode}}&amp;{% endif %}page=1">
+				{% else %}
+					<li class="disabled">
+				{% endif %}
+							<span aria-hidden="true">&laquo;&laquo;</span>
+						</a>
+					</li>
+
+				{% if list.has_previous %}
+					<li>
+						<a aria-label="Previous" href="?{% if queries %}{{queries.urlencode}}&amp;{% endif %}page={{ list.previous_page_number }}">
+				{% else %}
+					<li class="disabled">
+				{% endif %}
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+
+				{% for item in list.paginator.page_range %}
+
+					{% if item == list.number %}<li class="active">
+					{% else %}<li>
+					{% endif %}
+						<a href="?{% if queries %}{{queries.urlencode}}&amp;{% endif %}page={{ item }}">{{ item }}</a>
+					</li>
+
+				{% endfor %}
+
+				{% if list.has_next %}
+					<li><a href="?{% if queries %}{{queries.urlencode}}&amp;{% endif %}page={{ list.next_page_number }}" aria-label="Next">
+				{% else %}
+					<li class="disabled">
+				{% endif %}
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+
+				{% if list.has_next %}
+					<li><a href="?{% if queries %}{{queries.urlencode}}&amp;{% endif %}page={{ list.paginator.num_pages }}" aria-label="Next">
+				{% else %}
+					<li class="disabled">
+				{% endif %}
+							<span aria-hidden="true">&raquo;&raquo;</span>
+						</a>
+					</li>
+		</ul>
+	</nav>
+{% endif %}

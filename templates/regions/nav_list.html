@@ -1,0 +1,99 @@
+<ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#district" aria-controls="district" role="tab" data-toggle="tab">По округам</a></li>
+        <li role="presentation"><a href="#list" aria-controls="list" role="tab" data-toggle="tab">Списком</a></li>
+</ul>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active fade in" id="district">
+        <ul class="nav nav-sidebar">
+			{% regroup regions|dictsort:"district.id" by district as district_list %}
+
+			{% for district in district_list %}
+				<li>
+				   <a data-toggle="collapse"
+						href="#district{{ district.grouper.id }}"
+						aria-controls="district{{ district.grouper.id }}"
+						{% if act_region.district = district.grouper %}
+							aria-expanded="true">
+						{% else %}
+							aria-expanded="false">
+						{% endif %}
+					{{ district.grouper }}
+					</a>
+				</li>
+				<div role="tabpanel" id="district{{ district.grouper.id }}"
+					{% if act_region.district = district.grouper %}
+						class="collapse in">
+					{% else %}
+						class="collapse">
+					{% endif %}
+
+					<ul class="nav nav-sidebar-group">
+						{% for region in district.list %}
+							{% if region = act_region %}
+								<li class="active">
+							{% else %}
+								<li>
+							{% endif %}
+									<a href="{% url 'regions:detail' region.id %}"><span class="badge">{{ region.region_id }}</span> {{ region }}</a>
+								</li>
+						{% endfor %}
+					</ul>
+				</div>
+			{% endfor %}
+
+			{% comment %}
+            {% if districts %}
+                {% for district in districts %}
+                    <li>
+                       <a data-toggle="collapse"
+                            href="#district{{ district.id }}"
+                            aria-controls="district{{ district.id }}"
+                            {% if act_region.district = district %}
+                                aria-expanded="true">
+                            {% else %}
+                                aria-expanded="false">
+                            {% endif %}
+                        {{ district }}
+                        </a>
+                    </li>
+
+                    <div role="tabpanel" id="district{{ district.id }}"
+                        {% if act_region.district = district %}
+                            class="collapse in">
+                        {% else %}
+                            class="collapse">
+                        {% endif %}
+
+                        <ul class="nav nav-sidebar-group">
+                        {% for region in regions %}
+                            {% if region.district = district %}
+                                {% if region = act_region %}
+                                    <li class="active">
+                                {% else %}
+                                    <li>
+                                {% endif %}
+                                        <a href="{% url 'regions:detail' region.id %}"><span class="badge">{{ region.region_id }}</span> {{ region }}</a>
+                                    </li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+
+                    </div>
+                {% endfor %}
+            {% endif %}
+			{% endcomment %}
+        </ul>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="list">
+        <ul class="nav nav-sidebar">
+            {% if regions %}
+                {% for region in regions %}
+                    {% if region = act_region %} <li class="active"> {% else %} <li>{% endif %}
+                        <a href="{% url 'regions:detail' region.id %}"><span class="badge">{{ region.region_id }}</span> {{ region }}</a></li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+</div>

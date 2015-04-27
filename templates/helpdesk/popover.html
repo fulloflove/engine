@@ -1,0 +1,9 @@
+{% if region %}
+		{% for contact in region.contact_set.all %}
+			<p><a href=# class="contact_picker" data-contact="{{ contact.id }}">{{ contact.name }}</a></p>
+		{% empty %}
+			<p>Список контактов пуст</p>
+		{% endfor %}
+{% else %}
+		Необходимо выбрать инициатора
+{% endif %}
