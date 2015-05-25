@@ -1,13 +1,9 @@
 # coding: utf-8
-from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
-from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
-from django.template.loader import get_template
-from django.template import Context
 from forms import UserForm, IssueForm, ControlForm, CommentForm, DescriptionForm, ReportForm, IssuePeriodForm, \
     FilterForm
 from models import Issue, Project, ServiceType, Status
@@ -16,6 +12,7 @@ from regions.forms import ContactForm
 from datetime import date, timedelta
 from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from tasks import issue_creation
 
 
 @login_required
@@ -263,25 +260,6 @@ def issue_status(request, issue_id, status_id, context=None):
     return issue(request, issue_id, context)
 
 
-def mail_new_issue(curr_issue):
-    sys_from = settings.EMAIL_ADDRESS
-    plaintext = get_template('mail/email.txt')
-    html = get_template('mail/email.html')
-    url = settings.BASE_URL + reverse('helpdesk:issue', args=[curr_issue.id])
-    d = Context({'issue': curr_issue, 'url': url})
-    text_content = plaintext.render(d)
-    html_content = html.render(d)
-    to = [curr_issue.creator.email]
-    if curr_issue.project.common_email:
-        to.append(curr_issue.project.common_email)
-    if curr_issue.assignee != curr_issue.creator:
-        to.append(curr_issue.assignee.email)
-    theme = u"{0}. {1} {2}".format(curr_issue.project.name_short, _("New issue"), curr_issue.issue_id)
-    msg = EmailMultiAlternatives(theme, text_content, sys_from, to)
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
-
-
 def save_issue(form, current_user, continue_editing=False):
     curr_issue = form.save(commit=False)
     curr_region = curr_issue.region
@@ -292,8 +270,8 @@ def save_issue(form, current_user, continue_editing=False):
                                                   curr_region.region_count)
     curr_issue.creator = current_user
     curr_issue.save()
-    curr_issue.save_m2m()
-    mail_new_issue(curr_issue)
+    form.save_m2m()
+    issue_creation.delay(curr_issue)
 
     if continue_editing:
         return HttpResponseRedirect(reverse('helpdesk:edit_issue', args=[curr_issue.id]))
@@ -321,7 +299,7 @@ def new_issue(request):
         form = IssueForm(request.POST)
         if form.is_valid():
             if 'continue_editing' in request.POST:
-                return save_issue(form, current_user, True)
+                return save_issue(form, current_user, continue_editing=True)
             return save_issue(form, current_user)
 
     elif request.method == 'POST' and 'new_contact' in request.POST:
@@ -393,10 +371,6 @@ def popover(request, region_id=None):
     return render(request, 'helpdesk/popover.html', {'region': curr_region})
 
 
-def accounts(request):
-    return render(request, 'registration/accounts.html', {'accounts': User.objects.all()})
-
-
 @login_required
 def account_change(request):
     success = False
@@ -409,36 +383,3 @@ def account_change(request):
         user_form = UserForm(instance=request.user)
 
     return render(request, 'registration/edit_account.html', {'user_form': user_form, 'success': success})
-
-
-def register(request):
-    registered = False
-
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-
-        if 1 == 1:
-            # Save the user's form data to the database.
-            user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
-            user.save()
-
-            registered = True
-        else:
-            print 'errors'
-
-    else:
-        action = 1
-
-    return render(request,
-                  'helpdesk/register.html',
-                  {'action': action, 'registered': registered})
-
-
-def test(request, issue_id):
-    test_issue = get_object_or_404(Issue, pk=issue_id)
-    return render(request, 'mail/email.html', {'issue': test_issue,
-                                               'url': settings.BASE_URL + reverse('helpdesk:issue', args=[test_issue.id])})

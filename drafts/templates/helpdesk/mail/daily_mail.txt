@@ -1,0 +1,23 @@
+Добрый день, {{ user.first_name }}!
+
+{% if expired_issues %}
+	Истек срок контроля у следующих запросов:
+
+	{% for issue in expired_issues %}
+	    {{ issue.issue_id }}. {{ issue.region.name_short }}. {{ issue.subject }}.
+	    Контроль {{ issue.control }}
+	    [{{ issue.get_url }}]
+
+	{% endfor %}
+{% endif %}
+
+{% if expiring_issues %}
+	Запросы, срок контроля у которых истекает сегодня или завтра:
+
+	{% for issue in expiring_issues %}
+	    {{ issue.issue_id }}. {{ issue.region.name_short }}. {{ issue.subject }}.
+	    Контроль {{ issue.control }}
+	    [{{ issue.get_url }}]
+
+	{% endfor %}
+{% endif %}

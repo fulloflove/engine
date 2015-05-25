@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-21 18:56+0300\n"
+"POT-Creation-Date: 2015-05-13 16:03+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,15 +35,15 @@ msgstr "Закрытые запросы"
 msgid "Assigned to you"
 msgstr "Назначенные вам"
 
-#: bkp/views.py:250 views.py:249
+#: bkp/views.py:250 views.py:253
 msgid "Issue status is already set to: "
 msgstr "Запрос уже находится в статусе: "
 
-#: bkp/views.py:252 forms.py:82 views.py:251
+#: bkp/views.py:252 forms.py:82 views.py:255
 msgid "Issue must be formed to be closed"
 msgstr "Чтобы закрыть запрос, необходимо оформить данные для отчета"
 
-#: bkp/views.py:256 views.py:255
+#: bkp/views.py:256 views.py:261
 msgid "Issue status is changed. New status: "
 msgstr "Статус запроса изменен. Новый статус: "
 
@@ -55,10 +55,14 @@ msgstr "Некорректный адрес электронной почты"
 msgid "Both fields cannot be empty"
 msgstr "Оба поля не могут быть пусты"
 
-#: forms.py:87
+#: forms.py:87 views.py:257
 msgid "Contracts must be set for issue to be closed"
 msgstr "Чтобы закрыть запрос, необходимо указать договор сопровождения"
 
-#: views.py:273
+#: tasks.py:30
+msgid "Information about your issues"
+msgstr "Информация о ваших запросах"
+
+#: views.py:279
 msgid "New issue"
 msgstr "Новый запрос"

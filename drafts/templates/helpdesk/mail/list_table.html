@@ -1,0 +1,16 @@
+<table>
+	<thead>
+		<td>Номер</td>
+		<td>Инициатор</td>
+		<td>Тема</td>
+		<td>Контроль</td>
+	</thead>
+	{% for issue in issues %}
+		<tr>
+			<td>{{ issue.issue_id }}</td>
+			<td>{{ issue.region.name_short }}</td>
+			<td><a href="{{ issue.get_url }}">{{ issue.subject }}</a></td>
+			<td>{{ issue.control }}</td>
+		</tr>
+	{% endfor %}
+</table>

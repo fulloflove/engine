@@ -42,7 +42,6 @@ urlpatterns = patterns('',
     url(r'^popover/$', views.popover, name='popover'),
     url(r'^popover/(?P<region_id>\d+)/$', views.popover, name='popover_with_reg'),
 
-    url(r'^accounts/$', views.accounts, name='accounts'),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': 'helpdesk:index'}, name='logout'),
     url(r'^edit_account/$', views.account_change, name='edit_account'),
@@ -50,6 +49,4 @@ urlpatterns = patterns('',
         {'template_name': 'registration/change_password.html',
         'post_change_redirect': 'helpdesk:index'},
         name='change_password'),
-
-    url(r'^test/(?P<issue_id>\d+)/$', views.test, name='test'),
 )

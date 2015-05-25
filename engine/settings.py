@@ -7,9 +7,10 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-
+from __future__ import absolute_import
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 TEMPLATE_DIRS = [
@@ -50,7 +51,8 @@ INSTALLED_APPS = (
     'widget_tweaks',
     'haystack',
     'regions',
-    'helpdesk'
+    'helpdesk',
+    'djcelery'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -131,5 +133,26 @@ HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
+
+# Celery settings
+from celery.schedules import crontab
+
+BROKER_URL = 'amqp://celery:celery@127.0.0.1:5672/celeryvhost'
+CELERY_RESULT_BACKEND = 'amqp://celery:celery@127.0.0.1:5672/celeryvhost'
+
+CELERYBEAT_SCHEDULE = {
+    'issue_info_morning': {
+        'task': 'helpdesk.tasks.issue_info_morning',
+        'schedule': crontab(minute=0, hour=9)
+    },
+    'issue_info_afternoon': {
+        'task': 'helpdesk.tasks.issue_info_afternoon',
+        'schedule': crontab(minute=0, hour=14),
+    },
+    'issue_warning': {
+        'task': 'helpdesk.tasks.issue_warning',
+        'schedule': crontab(minute=0, hour=13),
     },
 }

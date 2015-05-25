@@ -1,5 +1,7 @@
 # coding: utf-8
 from django.db import models
+from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from regions.models import Region, Contact
 from datetime import date
@@ -142,15 +144,23 @@ class Issue(models.Model):
 
     @property
     def expired(self):
-        if self.control < date.today():
-            return True
-        return False
+        return self.control < date.today()
 
     @property
     def expires(self):
-        if self.control > date.today() and (self.control - date.today()).days <= 1:
-            return True
-        return False
+        return self.control >= date.today() and (self.control - date.today()).days <= 1
+
+    @property
+    def expires_tomorrow(self):
+        return (self.control - date.today()).days == 1
+
+    @property
+    def expires_today(self):
+        return self.control == date.today()
+
+    @property
+    def get_url(self):
+        return settings.BASE_URL + reverse('helpdesk:issue', args=[self.id])
 
 
 class Comment(models.Model):
