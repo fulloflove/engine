@@ -1,0 +1,14 @@
+<strong>Номер запроса:</strong> {{ issue.issue_id }} {% if issue.external_id %}({{ issue.external_id }}){% endif %}
+<br />Для просмотра перейдите по <a href="{{ issue.get_url }}">ссылке</a>.
+<p>
+	<strong>Инициатор:</strong> {{ issue.region }}<br />
+	{% if issue.contact %}<strong>Контакт:</strong> {{ issue.contact.name }}<br />{% endif %}
+	<strong>Контроль:</strong> {{ issue.control }}<br />
+	<strong>Ответственный:</strong> {{ issue.assignee.last_name }} {{ issue.assignee.first_name }}<br />
+</p>
+<hr />
+<p>
+	<strong>Проект:</strong> {{ issue.project }}<br />
+	<br /><strong>Тема:</strong> {{ issue.subject }}<br />
+	<br /><strong>Описание:</strong><br />{{ issue.description|linebreaks }}<br />
+</p>

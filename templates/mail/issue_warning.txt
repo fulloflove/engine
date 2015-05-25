@@ -1,0 +1,2 @@
+{% extends 'mail/issue_info.txt' %}
+{% block date %}Сегодня{% endblock %}

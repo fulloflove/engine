@@ -1,0 +1,15 @@
+Номер запроса: {{ issue.issue_id }} {% if issue.external_id %}({{ issue.external_id }}){% endif %}
+
+Для просмотра перейдите по ссылке: [{{ issue.get_url }}]
+
+Инициатор: {{ issue.region }}
+{% if issue.contact %}Контакт: {{ issue.contact.name }}{% endif %}
+Контроль: {{ issue.control }}
+Ответственный: {{ issue.assignee.last_name }} {{ issue.assignee.first_name }}
+
+Проект: {{ issue.project }}
+
+Тема: {{ issue.subject }}
+
+Описание:
+{{ issue.description }}
