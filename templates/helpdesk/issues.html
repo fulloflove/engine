@@ -11,7 +11,7 @@
 	{% elif active_nav == 'all' %}<h3>Все запросы</h3>
 	{% else %}<h3>Запросы по
 		{% if active_nav == 'region' %}региону{% elif active_nav == 'project' %}проекту{% elif active_nav == 'service_type' %}типу{% else %}исполнителю{% endif %}:
-	{% if active_nav == 'user' %}{{ active_item.last_name }}{{ active_item.first_name }}
+	{% if active_nav == 'user' %}{{ active_item.last_name }} {{ active_item.first_name }}
 	{% elif active_nav == 'region' %}<a href="{% url 'regions:detail' active_item.id %}">{{ active_item }}</a>
 	{% else %}{{ active_item }}{% endif %}</h3>
 	{% endif %}
