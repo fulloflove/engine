@@ -139,8 +139,8 @@ HAYSTACK_CONNECTIONS = {
 # Celery settings
 from celery.schedules import crontab
 
-BROKER_URL = 'amqp://celery:celery@127.0.0.1:5672/celeryvhost'
-CELERY_RESULT_BACKEND = 'amqp://celery:celery@127.0.0.1:5672/celeryvhost'
+BROKER_URL = 'amqp://127.0.0.1:5672'
+CELERY_RESULT_BACKEND = 'amqp://127.0.0.1:5672'
 
 CELERYBEAT_SCHEDULE = {
     'issue_info_morning': {

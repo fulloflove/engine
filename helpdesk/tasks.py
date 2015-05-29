@@ -56,6 +56,11 @@ def issue_info_afternoon():
 
 
 @task
+def issue_assign(issue):
+    issue_notification(issue, 'assign')
+
+
+@task
 def issue_warning():
     for user in User.objects.filter(pk=1):
         not_closed_issues = user.issues_assigned.exclude(status=4)

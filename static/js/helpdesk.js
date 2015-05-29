@@ -13,6 +13,11 @@ $(document).ready(function(){
         $(this).addClass('hidden');
         return false;
     });
+    $('body').on('click','.clear_form',function(){
+        resetForm($('#filter_form'));
+        $('.errorlist').remove()
+        return false;
+    });
     $('body').on('click','.quick_edit',function(e){
         var block = $(this).data('block');
         $('.quick_edit_'+block).toggle();
@@ -59,6 +64,12 @@ $('a.popup-ajax').popover({
         return details_in_popup($(this).attr('data-target'), div_id);
     }
 });
+
+function resetForm($form) {
+    $form.find('input:text, input:password, input:file, select, textarea').val('');
+    $form.find('input:radio, input:checkbox')
+         .removeAttr('checked').removeAttr('selected');
+}
 
 function details_in_popup(link, div_id){
     var reg_id = $('#id_region').val();

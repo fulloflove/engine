@@ -12,7 +12,7 @@ from regions.forms import ContactForm
 from datetime import date, timedelta
 from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from tasks import issue_creation
+from tasks import issue_creation, issue_assign
 
 
 @login_required
@@ -281,12 +281,20 @@ def save_issue(form, current_user, continue_editing=False):
 @login_required
 def filter_issues(request):
     filter_form = FilterForm(request.GET)
-    print request.GET.urlencode()
-    issue_list = Issue.objects.filter(**request.GET)
-    for item in request.GET:
-        if request.GET.get(item) != '':
-            print "%s %s" % (request.GET.get(item), item)
-    return render(request, 'helpdesk/filter.html', {'filter_form': filter_form, 'issues': issue_list})
+    context = {'filter_form': filter_form}
+    date_filters = ('created_start', 'created_end', 'control_start', 'control_end')
+    context['filtered'] = False
+    if 'search' in request.GET:
+        if filter_form.is_valid():
+            context['filtered'] = True
+            filtered_issues = Issue.objects.all()
+            params = [v for v in request.GET.keys() if request.GET.get(v) != '']
+            for p in params:
+                if p not in date_filters:
+                    qs_str = p + '__in'
+                    filtered_issues = filtered_issues.filter(**{qs_str: request.GET.getlist(p)})
+            context['issues'] = filtered_issues
+    return render(request, 'helpdesk/filter.html', context)
 
 
 @login_required
@@ -339,9 +347,12 @@ def edit_issue(request, issue_id):
     form = IssueForm(instance=current_issue)
 
     if request.method == 'POST' and ('new_issue' in request.POST or 'continue_editing' in request.POST):
+        current_assignee = current_issue.assignee
         form = IssueForm(request.POST or None, instance=current_issue)
         if form.is_valid():
             form.save()
+            if current_assignee != current_issue.assignee:
+                issue_assign.delay(current_issue)
             if 'continue_editing' in request.POST:
                 return HttpResponseRedirect(reverse('helpdesk:edit_issue', args=[current_issue.id]))
             return HttpResponseRedirect(reverse('helpdesk:issue', args=[current_issue.id]))

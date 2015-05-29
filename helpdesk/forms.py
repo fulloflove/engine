@@ -1,6 +1,6 @@
 # coding: utf-8
 from django.forms import Form, ModelForm, Textarea, ModelChoiceField, HiddenInput, \
-    DateTimeField, ValidationError, EmailField, ModelMultipleChoiceField, CheckboxSelectMultiple
+    DateTimeField, DateField, ValidationError, EmailField, ModelMultipleChoiceField, CheckboxSelectMultiple
 from django.contrib.auth.models import User
 from helpdesk.models import Issue, Comment, Priority, Project, Status, ServiceType, Component, Source
 from regions.models import Region
@@ -138,8 +138,8 @@ class FilterForm(Form):
     assignee = UserModelMultipleChoiceField(queryset=User.objects.filter(is_active=True),
                                             label=u'Ответственный', required=False)
 
-    created_start = DateTimeField(required=False, label=u'Начальная дата создания')
-    created_end = DateTimeField(required=False, label=u'Конечная дата создания')
+    created_start = DateField(required=False, label=u'Начальная дата создания')
+    created_end = DateField(required=False, label=u'Конечная дата создания')
 
-    control_start = DateTimeField(required=False, label=u'Начальная дата контроля')
-    control_end = DateTimeField(required=False, label=u'Конечная дата контроля')
+    control_start = DateField(required=False, label=u'Начальная дата контроля')
+    control_end = DateField(required=False, label=u'Конечная дата контроля')
