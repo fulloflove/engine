@@ -1,0 +1,85 @@
+{% if issues %}
+<div class="col-md-12">
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+		{% for issue in issues %}
+
+		{% if issue.status.id == 4 %}
+		<div class="panel panel-success">
+		{% elif issue.status.id != 4 and issue.expires %}
+		<div class="panel panel-warning">
+		{% elif issue.status.id != 4 and issue.expired %}
+		<div class="panel panel-danger">
+		{% else %}
+		<div class="panel panel-default">
+		{% endif %}
+
+			<div class="panel-heading" role="tab" id="heading{{ issue.id }}">
+				<div class="pull-right">
+					<span class="label label-default">{{ issue.service_type.name_short }}</span>
+				</div>
+				<a data-toggle="collapse" href="#collapse{{ issue.id }}" aria-expanded="true" aria-controls="collapse{{ issue.id }}">
+					{{ issue.project }}. {{ issue.issue_id }}{% if issue.external_id %} / {{ issue.external_id }} {% endif %}
+					<small><span class="glyphicon glyphicon glyphicon-menu-down" aria-hidden="true"></span></small>
+				</a>
+			</div>
+			<div id="collapse{{ issue.id }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{{ issue.id }}">
+				<div class="panel-body">
+					<div class="col-md-10">
+						{{ issue.region }}.
+						<a href="{% url 'helpdesk:issue' issue.id %}">{{ issue.subject }}</a><br />
+						<small>Исполнитель: {{ issue.assignee.first_name }} {{ issue.assignee.last_name }}</small>
+						<p>{{ issue.description|linebreaks }}</p>
+						<hr />
+					</div>
+					<div class="col-md-2">
+						<div class="pull-right">
+							{% if issue.formed %}
+								<span class="text-success">
+									<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+									<span class="sr-only">Formed</span>
+								</span>
+								Оформлен
+							{% else %}
+								<span class="text-danger">
+									<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+									<span class="sr-only">Not formed</span>
+								</span>
+								Не оформлен
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<blockquote>
+							<strong>Содержание запрошенной услуги</strong>
+							<p>{{ issue.report_description|default:"не заполнено" }}</p>
+						</blockquote>
+					</div>
+					<div class="col-md-6">
+						<blockquote>
+							<strong>Содержание оказанной услуги</strong>
+							<p>{{ issue.report_solution|default:"не заполнено"  }}</p>
+						</blockquote>
+					</div>
+					<div class="col-md-12">Договор сопровождения:
+						{% if issue.contracts.all %}
+							{{ issue.contracts.all|join:", " }}
+						{% else %}
+							не заполнено
+						{% endif %}
+					<hr />
+					</div>
+					<div class="col-md-12">
+						<small>Контроль {{ issue.control }}</small>
+
+						<div class="pull-right">
+							<small>Создан: {{ issue.created|date:"d E Y" }}</small>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+{% endif %}

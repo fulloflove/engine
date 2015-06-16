@@ -9,7 +9,13 @@
 {% block body_block %}
 
 <!-- Modal -->
-{% include "regions/contact_form_modal.html" %}
+<div class="modal fade" id="ContactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			{% include "regions/contact_form_modal.html" %}
+		</div>
+	</div>
+</div>
 <!-- end of Modal -->
 
 
@@ -26,6 +32,21 @@
 	</div>
 	<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 		<div class="panel-body">
+			{% if contact_form.errors %}
+			<div class="col-md-3">
+				<div class="alert alert-warning alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<p><span class="glyphicon glyphicon-exclamation-sign"></span> Данные заполнены неверно</p>
+					<br />
+					<button type="button" class="btn btn-default" data-toggle="modal" data-target="#ContactModal">
+						Попробуйте еще раз
+					</button>
+				</div>
+			</div>
+			{% endif %}
+
 			{% if contact_list %}
 			<table class="table table-hover">
 				<thead class="issue-table">
@@ -34,6 +55,7 @@
 						<th>Телефон</th>
 						<th>E-mail</th>
 						<th>Должность</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -47,6 +69,7 @@
 								{% endfor %}
 							</td>
 							<td>{{ item.job }}</td>
+							<td><a href="{% url 'regions:contact_edit_modal' item.id %}" data-toggle="modal" data-target="#ContactModal"><span class="glyphicon glyphicon-pencil"></span></a></td>
 						</tr>
 					{% endfor %}
 				</tbody>
@@ -54,8 +77,8 @@
 			{% else %}Сохраненных контактов нет
 			{% endif %}
 			<hr />
-			{% if contact_form.errors %}<p class="text-danger">Данные заполнены некорректно. Попробуйте еще раз.</p>{% endif %}
-			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newContact">
+			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#ContactModal"
+					href="{% url 'regions:new_contact_modal' region.id %}">
 				<span class="glyphicon glyphicon-plus"></span> Новый контакт </button>
 		</div>
 	</div>

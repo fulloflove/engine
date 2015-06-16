@@ -156,3 +156,6 @@ CELERYBEAT_SCHEDULE = {
         'schedule': crontab(minute=0, hour=13),
     },
 }
+
+# Pagination
+ENTRIES_PER_PAGE = 25

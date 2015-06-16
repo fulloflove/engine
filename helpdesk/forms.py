@@ -2,7 +2,7 @@
 from django.forms import Form, ModelForm, Textarea, ModelChoiceField, HiddenInput, \
     DateTimeField, DateField, ValidationError, EmailField, ModelMultipleChoiceField, CheckboxSelectMultiple
 from django.contrib.auth.models import User
-from helpdesk.models import Issue, Comment, Priority, Project, Status, ServiceType, Component, Source
+from helpdesk.models import Issue, Comment, Priority, Project, Status, ServiceType, Component, Source, Contract
 from regions.models import Region
 from django.utils.translation import ugettext as _
 
@@ -137,6 +137,8 @@ class FilterForm(Form):
                                            label=u'Автор', required=False)
     assignee = UserModelMultipleChoiceField(queryset=User.objects.filter(is_active=True),
                                             label=u'Ответственный', required=False)
+    contracts = ModelMultipleChoiceField(queryset=Contract.objects.all(),
+                                         label=u'Договор', required=False, widget=CheckboxSelectMultiple)
 
     created_start = DateField(required=False, label=u'Начальная дата создания')
     created_end = DateField(required=False, label=u'Конечная дата создания')

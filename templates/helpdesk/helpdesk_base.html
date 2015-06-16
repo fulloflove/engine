@@ -22,14 +22,16 @@
 	<a class="btn btn-primary" href="{% url 'helpdesk:new_issue' %}">
 		<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
 		<span class="sr-only">Создать</span>
-		Создать новый запрос
+		Новый запрос
 	</a>
-	<a class="btn btn-primary" href="{% url 'helpdesk:filter' %}">
-		<span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+	<a class="btn btn-default" href="{% url 'helpdesk:filter' %}">
+		<span class="glyphicon glyphicon-filter text-primary" aria-hidden="true"></span>
 		<span class="sr-only">Фильтр</span>
+		Фильтр
 	</a>
-	<a class="btn btn-primary" href="{% url 'search:haystack_search' %}">
-		<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+	<a class="btn btn-default" href="{% url 'search:haystack_search' %}">
+		<span class="glyphicon glyphicon-search text-primary" aria-hidden="true"></span>
 		<span class="sr-only">Поиск</span>
+		Поиск
 	</a>
 {% endblock %}

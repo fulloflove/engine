@@ -65,12 +65,6 @@ $('a.popup-ajax').popover({
     }
 });
 
-function resetForm($form) {
-    $form.find('input:text, input:password, input:file, select, textarea').val('');
-    $form.find('input:radio, input:checkbox')
-         .removeAttr('checked').removeAttr('selected');
-}
-
 function details_in_popup(link, div_id){
     var reg_id = $('#id_region').val();
     var reg_link = link + reg_id;
@@ -80,5 +74,20 @@ function details_in_popup(link, div_id){
             $('#'+div_id).html(response);
         }
     });
-    return '<div id="'+ div_id +'">Loading...</div>';
+    return '<div id="'+ div_id +'">'
+        + '<div class="progress progress-striped active">'
+        + '<div class="progress-bar" style="width:100%"></div>'
+        + '</div></div>';
+}
+
+$("#ContactModal").on("show.bs.modal", function(e) {
+    var link = $(e.relatedTarget);
+    $(this).find(".modal-content").load(link.attr("href"));
+});
+
+
+function resetForm($form) {
+    $form.find('input:text, input:password, input:file, select, textarea').val('');
+    $form.find('input:radio, input:checkbox')
+         .removeAttr('checked').removeAttr('selected');
 }

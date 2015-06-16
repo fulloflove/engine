@@ -36,7 +36,8 @@
                     {% if user.is_authenticated %}
                         <li class="dropdown">
                             <a id="drop" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
-                                Привет, {{ user.first_name }}
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								<span class="sr-only">User</span>
                                 <div class="caret"></div>
                             </a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="drop">

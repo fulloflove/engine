@@ -1,0 +1,62 @@
+<div class="panel panel-default">
+	{% if title %}
+		<div class="panel-heading">
+			{{ title }} ({{ issues.paginator.count }})
+			<div class="pull-right">
+				<a tabindex="0" data-toggle="popover" data-trigger="focus" data-placement="left" data-html="true"
+				   title="Обозначение строк в таблице"
+				   data-content="
+					   <div class='alert alert-warning legend' role='alert'>Истекает срок контроля</div>
+					   <div class='alert alert-danger legend' role='alert'>Срок контроля истек</div>
+					   <div class='alert alert-success legend' role='alert'>Закрытые запросы</div>
+					">
+					<span class="glyphicon glyphicon-question-sign text-primary" id="legend"></span>
+				</a>
+			</div>
+		</div>
+	{% endif %}
+
+		<div class="col-md-8">
+			{% include "helpdesk/paginator.html" with list=issues %}
+		</div>
+		{% if filter_form %}
+		<div class="col-md-4">
+
+			<div class="pull-right">
+				<div class="pagination">
+					<div class="btn-group" role="group">
+						{% if not extended_view %}
+							<a role="button" class="btn btn-sm btn-default active">кратко</a>
+							<a role="button" href="?{% if queries %}{{ queries.urlencode }}&amp;{% endif %}view=extended" class="btn btn-sm btn-default">подробно</a>
+						{% else %}
+							<a role="button" href="?{{ queries.urlencode }}" class="btn btn-sm btn-default">кратко</a>
+							<a role="button" class="btn btn-sm btn-default active">подробно</a>
+						{% endif %}
+					</div>
+
+					<a target="_blank" class="btn btn-sm btn-default" href="?{% if queries %}{{ queries.urlencode }}&amp;{% endif %}export=html">
+						HTML
+						<span class="glyphicon glyphicon-share-alt"></span>
+					</a>
+					<a class="btn btn-sm btn-default" href="?{% if queries %}{{ queries.urlencode }}&amp;{% endif %}export=xls">
+						XLS
+						<span class="glyphicon glyphicon-download-alt"></span>
+					</a>
+					<a class="btn btn-sm btn-default" href="?{% if queries %}{{ queries.urlencode }}&amp;{% endif %}export=csv">
+						CSV
+						<span class="glyphicon glyphicon-download-alt"></span>
+					</a>
+			</div>
+			</div>
+		</div>
+		{% endif %}
+	{% if extended_view %}
+		{% include "helpdesk/table_extended.html" %}
+	{% else %}
+		{% include "helpdesk/table.html" %}
+	{% endif %}
+		<div class="col-md-8">
+			{% include "helpdesk/paginator.html" with list=issues %}
+		</div>
+
+</div>

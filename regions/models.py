@@ -1,8 +1,6 @@
 # coding: utf-8
 from django.db import models
 
-# Cuate your models here.
-
 
 class District(models.Model):
     def __unicode__(self):  # Python 3: def __str__(self):
@@ -47,7 +45,7 @@ class Contact(models.Model):
 
     name = models.CharField(verbose_name=u'Ф.И.О.', max_length=128)
     phone = models.CharField(verbose_name=u'Телефон', max_length=128, null=True, blank=True)
-    email = models.CharField(verbose_name='E-mail', max_length=128, null=True, blank=True)
+    email = models.CharField(verbose_name=u'E-mail', max_length=128, null=True, blank=True)
     job = models.CharField(verbose_name=u'Должность', max_length=200, null=True, blank=True)
     region = models.ForeignKey(Region, verbose_name=u'Регион')
     legacy_id = models.IntegerField(verbose_name='MySQL ID', null=True, blank=True)

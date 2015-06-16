@@ -4,17 +4,8 @@
 
 				{% if list.has_previous %}
 					<li>
-						<a aria-label="Previous" href="?{% if queries %}{{queries.urlencode}}&amp;{% endif %}page=1">
-				{% else %}
-					<li class="disabled">
-				{% endif %}
-							<span aria-hidden="true">&laquo;&laquo;</span>
-						</a>
-					</li>
-
-				{% if list.has_previous %}
-					<li>
-						<a aria-label="Previous" href="?{% if queries %}{{queries.urlencode}}&amp;{% endif %}page={{ list.previous_page_number }}">
+						<a aria-label="Previous"
+						   href="?{% if queries %}{{ queries.urlencode }}&amp;{% endif %}page={{ list.previous_page_number }}{% if extended_view %}&amp;view=extended{% endif %}">
 				{% else %}
 					<li class="disabled">
 				{% endif %}
@@ -22,31 +13,43 @@
 						</a>
 					</li>
 
-				{% for item in list.paginator.page_range %}
+				{% if list.number == 1 %}<li class="active">
+				{% else %}<li>
+				{% endif %}
+					<a href="?{% if queries %}{{ queries.urlencode }}&amp;{% endif %}page=1{% if extended_view %}&amp;view=extended{% endif %}">1</a>
+				</li>
 
-					{% if item == list.number %}<li class="active">
-					{% else %}<li>
+				{% if first_break %}
+					<li class="disabled"><span>...</span></li>
+				{% endif %}
+
+				{% for item in pagination_range %}
+
+					{% if item == list.number %}<li class="active"><a href="#">
+					{% else %}<li><a href="?{% if queries %}{{ queries.urlencode }}&amp;{% endif %}page={{ item }}{% if extended_view %}&amp;view=extended{% endif %}">
 					{% endif %}
-						<a href="?{% if queries %}{{queries.urlencode}}&amp;{% endif %}page={{ item }}">{{ item }}</a>
+						{{ item }}</a>
 					</li>
 
 				{% endfor %}
 
+				{% if last_break %}
+					<li class="disabled"><span>...</span></li>
+				{% endif %}
+
+				{% if list.number == list.paginator.num_pages %}<li class="active">
+				{% else %}<li>
+				{% endif %}
+					<a href="?{% if queries %}{{ queries.urlencode }}&amp;{% endif %}page={{ list.paginator.num_pages }}{% if extended_view %}&amp;view=extended{% endif %}">{{ list.paginator.num_pages }}</a>
+				</li>
+
+
 				{% if list.has_next %}
-					<li><a href="?{% if queries %}{{queries.urlencode}}&amp;{% endif %}page={{ list.next_page_number }}" aria-label="Next">
+					<li><a href="?{% if queries %}{{ queries.urlencode }}&amp;{% endif %}page={{ list.next_page_number }}" aria-label="Next">
 				{% else %}
 					<li class="disabled">
 				{% endif %}
 							<span aria-hidden="true">&raquo;</span>
-						</a>
-					</li>
-
-				{% if list.has_next %}
-					<li><a href="?{% if queries %}{{queries.urlencode}}&amp;{% endif %}page={{ list.paginator.num_pages }}" aria-label="Next">
-				{% else %}
-					<li class="disabled">
-				{% endif %}
-							<span aria-hidden="true">&raquo;&raquo;</span>
 						</a>
 					</li>
 		</ul>

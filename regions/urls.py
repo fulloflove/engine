@@ -7,9 +7,7 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     # ex: /regions/5/
     url(r'^(?P<region_id>\d+)/$', views.detail, name='detail'),
-    # ex: /regions/5/edit/
-    url(r'^(?P<region_id>\d+)/edit/$', views.edit, name='edit'),
-    # ex: /regions/5/submit/
-    url(r'^(?P<region_id>\d+)/submit/$', views.submit, name='submit'),
     url(r'^suggest_region/$', views.suggest_region, name='suggest_region'),
+    url(r'^contact/(?P<contact_id>\d+)/edit/$', views.contact_modal, name='contact_edit_modal'),
+    url(r'^(?P<region_id>\d+)/new_contact/$', views.contact_modal, name='new_contact_modal'),
 )

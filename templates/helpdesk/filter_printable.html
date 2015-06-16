@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>HelpDesk export</title>
+		<style>
+			table, td, th {
+			border: 1px solid;
+			padding: 5px;
+			border-collapse: collapse;
+			}
+
+    </style>
+	</head>
+    <body>
+		<table style="padding: 5px; border: 1px solid;">
+			<tr>
+				<th>Номер</th>
+				<th>Входящий номер</th>
+				<th>Тип запроса</th>
+				<th>Описание</th>
+				<th>Решение</th>
+				<th>Создан</th>
+				<th>Контроль</th>
+				<th>Регион</th>
+			</tr>
+			{% for issue in issues %}
+			<tr>
+				<td>{{ issue.issue_id }}</td>
+				<td>{{ issue.external_id }}</td>
+				<td>{{ issue.service_type.name_short }}</td>
+				<td>{{ issue.report_description }}</td>
+				<td>{{ issue.report_solution }}</td>
+				<td>{{ issue.created|date:"d.m.Y"  }}</td>
+				<td>{{ issue.control|date:"d.m.Y"  }}
+				<td>{{ issue.region.gu }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</body>
+</html>

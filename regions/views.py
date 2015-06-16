@@ -1,7 +1,6 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404
-from django.core.urlresolvers import reverse
-from regions.models import Region, District, Contact
+from regions.models import Region, Contact
 from helpdesk.models import Issue
 from regions.forms import ContactForm
 
@@ -16,8 +15,8 @@ def suggest_region(request):
     reg_list = []
     if request.method == 'GET':
         starts_with = request.GET['suggestion']
-    if starts_with:
-        reg_list = Region.objects.filter(name_short__istartswith=starts_with)
+        if starts_with:
+            reg_list = Region.objects.filter(name_short__istartswith=starts_with)
     return render(request, 'regions/nav_list_suggest.html', {'regions': reg_list})
 
 
@@ -25,38 +24,35 @@ def detail(request, region_id):
     region = get_object_or_404(Region, pk=region_id)
     contact_list = Contact.objects.filter(region=region)
     last_issues = Issue.objects.filter(region=region)[:5]
-    contact_form = ContactForm()
-    if request.method == 'POST':
-        if 'contact_form' in request.POST:
-            contact_form = ContactForm(request.POST)
-            if contact_form.is_valid():
-                curr_contact = contact_form.save(commit=False)
-                curr_contact.region = region
-                curr_contact.save()
-                contact_form = ContactForm()
+    context = {'region': region, 'contact_list': contact_list, 'last_issues': last_issues}
+    if request.method == 'POST' and ('new_contact' in request.POST or 'edit_contact' in request.POST):
+        if 'new_contact' in request.POST:
+            context = contact_modal_context(request, context, region_id=request.POST.get('region'))
+        elif 'edit_contact' in request.POST:
+            context = contact_modal_context(request, context, contact_id=request.POST.get('contact_id'))
+        if context['contact_form'].is_valid():
+            context['contact_form'].save()
 
-    return render(request, 'regions/detail.html', {'region': region,
-                                                   'contact_list': contact_list,
-                                                   'last_issues': last_issues,
-                                                   'contact_form': contact_form})
+    return render(request, 'regions/detail.html', context)
 
 
-def edit(request, region_id):
-    region = get_object_or_404(Region, pk=region_id)
-    return render(request, 'regions/edit.html', {'region': region})
-
-
-def submit(request, region_id):
-    region = get_object_or_404(Region, pk=region_id)
-    try:
-        new_count = request.POST['region_count']
-    except KeyError:
-        # Redisplay form.
-        return render(request, 'regions/edit.html', {
-            'region': region,
-            'error_message': "Incorrect data.",
-        })
+def contact_modal_context(request, context=None, contact_id=None, region_id=None):
+    if context is None:
+        context = {}
+    if contact_id:
+        context['contact_id'] = contact_id
+        curr_contact = get_object_or_404(Contact, pk=contact_id)
+        context['contact_form'] = ContactForm(request.POST or None, instance=curr_contact)
+        context['action'] = 'edit_contact'
+    elif region_id:
+        initial = {'region': region_id}
+        context['contact_form'] = ContactForm(request.POST or None, initial=initial)
+        context['action'] = 'new_contact'
     else:
-        region.region_count = new_count
-        region.save()
-        return HttpResponseRedirect(reverse('regions:detail', args=(region.id,)))
+        raise Http404
+    return context
+
+
+def contact_modal(request, contact_id=None, region_id=None):
+    context = contact_modal_context(request, contact_id=contact_id, region_id=region_id)
+    return render(request, 'regions/contact_form_modal.html', context)
