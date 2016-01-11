@@ -2,31 +2,40 @@
 
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	<h4 class="modal-title" id="contactModalLabel">{% if action == 'new_contact' %}Новый контакт{% else %}Редактирование контакта{% endif %}</h4>
-</div>
-<form method="post" action=".">
-	{% csrf_token %}
+{% if action %}
+		<h4 class="modal-title" id="contactModalLabel">{% if action == 'new_contact' %}Новый контакт{% else %}Редактирование контакта{% endif %}</h4>
+	</div>
+	<form method="post" action=".">
+		{% csrf_token %}
+		<div class="modal-body">
+			<div class="form-horizontal">
+				{% if contact_id %}
+					<input type="hidden" name="contact_id" value="{{ contact_id }}">
+				{% endif %}
+				{% for field in contact_form %}
+					<div class="form-group">
+						<div class="col-md-3 control-label">
+							{{ field.label_tag }}
+						</div>
+						<div class="col-md-7">
+							{% render_field field class="form-control" %}
+							{{ field.errors }}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+			<button type="submit" class="btn btn-primary" name="{{ action }}">Сохранить</button>
+		</div>
+	</form>
+{% else %}
+	</div>
 	<div class="modal-body">
-		<div class="form-horizontal">
-			{% if contact_id %}
-				<input type="hidden" name="contact_id" value="{{ contact_id }}">
-			{% endif %}
-			{% for field in contact_form %}
-				<div class="form-group">
-					<div class="col-md-3 control-label">
-						{{ field.label_tag }}
-					</div>
-					<div class="col-md-7">
-						{% render_field field class="form-control" %}
-						{{ field.errors }}
-					</div>
-				</div>
-			{% endfor %}
+		<div class="progress progress-striped active">
+			<div class="progress-bar" style="width:100%"></div>
 		</div>
 	</div>
-
-	<div class="modal-footer">
-		<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-		<button type="submit" class="btn btn-primary" name="{{ action }}">Сохранить</button>
-	</div>
-</form>
+{% endif %}
