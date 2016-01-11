@@ -1,7 +1,11 @@
 from django.contrib import admin
 from regions.models import Region, District, Contact
 
-admin.site.register(Region)
+
+class RegionAdmin(admin.ModelAdmin):
+    list_display = ('region_id', 'name', 'gu')
+
+admin.site.register(Region, RegionAdmin)
 
 admin.site.register(District)
 
