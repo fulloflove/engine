@@ -5,8 +5,6 @@ from models import Issue
 
 class IssueIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    external_id = indexes.CharField(model_attr='external_id')
-    subject = indexes.CharField(model_attr='subject')
 
     def get_model(self):
         return Issue

@@ -40,7 +40,7 @@ def issue_creation(issue):
 
 @task
 def issue_info_morning(common=False):
-    for user in User.objects.filter(pk=1):
+    for user in User.objects.filter(is_active=True):
         not_closed_issues = user.issues_assigned.exclude(status=4)
         expiring_tomorrow_issues = [issue for issue in not_closed_issues if issue.expires_tomorrow]
         for issue in expiring_tomorrow_issues:
@@ -62,7 +62,7 @@ def issue_assign(issue):
 
 @task
 def issue_warning():
-    for user in User.objects.filter(pk=1):
+    for user in User.objects.filter(is_active=True):
         not_closed_issues = user.issues_assigned.exclude(status=4)
         expiring_today_issues = [issue for issue in not_closed_issues if issue.expires_today]
         for issue in expiring_today_issues:

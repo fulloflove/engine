@@ -36,8 +36,8 @@ class RegionModelChoiceField(ModelChoiceField):
 
 
 class IssuePeriodForm(Form):
-    start = DateTimeField(required=False, label=u'Начальная дата')
-    end = DateTimeField(required=False, label=u'Конечная дата')
+    start = DateField(required=False, label=u'Начальная дата')
+    end = DateField(required=False, label=u'Конечная дата')
 
     def clean(self):
         cleaned_data = super(IssuePeriodForm, self).clean()
@@ -61,7 +61,7 @@ class IssueForm(ModelForm):
     class Meta:
         model = Issue
         fields = ('external_id', 'subject', 'priority', 'status', 'project', 'component', 'service_type', 'source',
-                  'control', 'assignee', 'region', 'formed', 'contact', 'description',
+                  'opened', 'control', 'assignee', 'region', 'formed', 'contact', 'description',
                   'report_description', 'report_solution', 'contracts')
         widgets = {
             'description': Textarea(attrs={'rows': 3}),
@@ -140,8 +140,8 @@ class FilterForm(Form):
     contracts = ModelMultipleChoiceField(queryset=Contract.objects.all(),
                                          label=u'Договор', required=False, widget=CheckboxSelectMultiple)
 
-    created_start = DateField(required=False, label=u'Начальная дата создания')
-    created_end = DateField(required=False, label=u'Конечная дата создания')
+    opened_start = DateField(required=False, label=u'Начальная дата создания')
+    opened_end = DateField(required=False, label=u'Конечная дата создания')
 
     control_start = DateField(required=False, label=u'Начальная дата контроля')
     control_end = DateField(required=False, label=u'Конечная дата контроля')

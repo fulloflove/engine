@@ -118,6 +118,7 @@ class Issue(models.Model):
     issue_id = models.CharField(verbose_name=u'номер запроса', max_length=30)
     external_id = models.CharField(verbose_name=u'входящий номер', max_length=50, blank=True)
     subject = models.CharField(verbose_name=u'тема', max_length=255)
+    opened = models.DateField(verbose_name=u'дата открытия', null=True)
     created = models.DateTimeField(verbose_name=u'создан', auto_now_add=True)
     changed = models.DateTimeField(verbose_name=u'изменен', auto_now=True)
     priority = models.ForeignKey(Priority, verbose_name=u'приоритет', default=3)

@@ -31,13 +31,13 @@
 						<div class="form-group">
 							<div class="col-md-4 col-md-offset-1">
 								<div class="input-group input-group-sm">
-									<span class="input-group-addon">Дата создания с:</span>
-									{% render_field filter_form.created_start class="form-control datepicker" %}
+									<span class="input-group-addon">Дата открытия с:</span>
+									{% render_field filter_form.opened_start class="form-control datepicker" %}
 									<span class="input-group-addon">по:</span>
-									{% render_field filter_form.created_end class="form-control datepicker" %}
+									{% render_field filter_form.opened_end class="form-control datepicker" %}
 								</div>
-								{{ filter_form.created_start.errors }}
-								{{ filter_form.created_end.errors }}
+								{{ filter_form.opened_start.errors }}
+								{{ filter_form.opened_end.errors }}
 							</div>
 							<div class="col-md-4 col-md-offset-1">
 								<div class="input-group input-group-sm">
@@ -143,7 +143,7 @@
 							</div>
 							<div class="col-md-11">
 								{% for contract in filter_form.contracts %}
-									<label for="{{ contract.id_for_label }}" class="checkbox-inline">
+									<label class="checkbox-inline">
 										{{ contract.tag }}{{ contract.choice_label }}
 									</label>
 								{% endfor %}

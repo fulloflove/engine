@@ -98,8 +98,9 @@
 			{% endif %}
 			<div class="panel-body">
 				{% if not last_issues %}Запросы не найдены. {% endif %}
-				<a href="{% url 'helpdesk:region_open' region.id %}">Все запросы</a>
+				<a href="{% url 'helpdesk:issues_main_view' 'region' region.id %}">Все запросы</a>
 			</div>
 	</div>
+</div>
 </div>
 {% endblock %}

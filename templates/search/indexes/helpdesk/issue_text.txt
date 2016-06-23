@@ -1,6 +1,5 @@
 {{ object.issue_id }}
 {{ object.external_id }}
-{{ object.creator.last_name }}
 {{ object.subject }}
 {{ object.description }}
 {{ object.report_description }}
@@ -8,3 +7,4 @@
 {% for comment in object.comment_set.all %}
     {{ comment.comment_text }}
 {% endfor %}
+{{ object.contact.name }}

@@ -29,9 +29,23 @@
 		<span class="sr-only">Фильтр</span>
 		Фильтр
 	</a>
-	<a class="btn btn-default" href="{% url 'search:haystack_search' %}">
+	<!--<a class="btn btn-default" href="{% url 'search:haystack_search' %}">
 		<span class="glyphicon glyphicon-search text-primary" aria-hidden="true"></span>
 		<span class="sr-only">Поиск</span>
 		Поиск
+	</a>-->
+	<a class="btn btn-default" role="button" data-toggle="popover" data-placement="bottom" data-html="true"
+			data-content='<form class="form-horizontal" role="form" method="get" action="/search">
+				<div class="input-group">
+					<input name="q" type="text" class="form-control" placeholder="Введите текст запроса">
+					<span class="input-group-btn">
+						<button class="btn btn-primary" type="submit">Поиск</button>
+					</span>
+				</div>
+			</form>'>
+
+		<span class="glyphicon glyphicon-search text-primary" aria-hidden="true"></span>
+		<span class="sr-only">Поиск</span>
 	</a>
+
 {% endblock %}

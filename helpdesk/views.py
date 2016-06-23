@@ -79,7 +79,6 @@ def issues_dates_filter(issue_list, **kwargs):
     return issue_list
 
 
-@login_required
 def issues_period(request, context):
     period_form = IssuePeriodForm()
     issue_list = []
@@ -88,12 +87,13 @@ def issues_period(request, context):
         period_form = IssuePeriodForm(request.GET)
         if period_form.is_valid():
             issue_list = context['issues']
+            #issue_list = issues_dates_filter(issue_list, period_form.cleaned_data)
             if period_form.cleaned_data.get('start'):
                 start_date = period_form.cleaned_data.get('start')
-                issue_list = issue_list.filter(created__gte=start_date)
+                issue_list = issue_list.filter(opened__gte=start_date)
             if period_form.cleaned_data.get('end'):
                 end_date = period_form.cleaned_data.get('end')
-                issue_list = issue_list.filter(created__lte=end_date)
+                issue_list = issue_list.filter(opened__lte=end_date)
             context['queries'] = get_queries(request)
 
     context['period_form'] = period_form
@@ -102,144 +102,83 @@ def issues_period(request, context):
     return issues(request, context)
 
 
-def open_issues():
-    return {'issues': Issue.objects.exclude(status=4), 'status': 'open', 'title': _('Open issues')}
+def open_issues(context):
+    context.update({'issues': Issue.objects.exclude(status=4), 'title': _('Open issues')})
+    return context
 
 
-def closed_issues():
-    return {'issues': Issue.objects.filter(status=4), 'status': 'closed', 'title': _('Closed issues')}
+def closed_issues(context):
+    context.update({'issues': Issue.objects.filter(status=4), 'title': _('Closed issues')})
+    return context
 
+
+def any_issues(context):
+    context.update({'issues': Issue.objects.all(), 'title': _('Any issues')})
+    return context
 
 @login_required
 def my_issues(request, context):
     context['issues'] = context['issues'].filter(assignee=request.user)
-    context['active_nav'] = 'my'
     return context
 
 
-@login_required
-def my_open_issues(request):
-    context = my_issues(request, open_issues())
-    context['title'] = _('Assigned to you')
-    return issues(request, context)
+def issues_main_view(request, active_nav, item_id=None, status=None, scope=None):
+    context = {'active_nav': active_nav, 'status': status}
+    if status is None:
+        context['status'] = 'open'
+        status_func = open_issues(context)
+    elif status == 'any':
+        status_func = any_issues(context)
+    elif status == 'closed':
+        status_func = closed_issues(context)
+    else:
+        raise Http404
 
+    if scope == 'period':
+        return_func = issues_period
+    else:
+        return_func = issues
 
-@login_required
-def my_closed_issues(request):
-    return issues(request, my_issues(request, closed_issues()))
+    if active_nav == 'my':
+        context = my_issues(request, status_func)
+    elif active_nav == 'all':
+        context = status_func
+    elif active_nav == 'project':
+        context = issues_by_project(status_func, item_id)
+    elif active_nav == 'service_type':
+        context = issues_by_service_type(status_func, item_id)
+    elif active_nav == 'region':
+        context = issues_by_region(status_func, item_id)
+    elif active_nav == 'user':
+        context = issues_by_assignee(status_func, item_id)
+    else:
+        raise Http404
 
-
-@login_required
-def my_issues_period(request):
-    return issues_period(request, my_issues(request, closed_issues()))
-
-
-def all_issues(context):
-    context['active_nav'] = 'all'
-    return context
-
-
-@login_required
-def all_open_issues(request):
-    return issues(request, all_issues(open_issues()))
-
-
-@login_required
-def all_closed_issues(request):
-    return issues(request, all_issues(closed_issues()))
-
-
-@login_required
-def all_issues_period(request):
-    return issues_period(request, all_issues(closed_issues()))
+    return return_func(request, context)
 
 
 def issues_by_region(context, region_id):
     context['active_item'] = get_object_or_404(Region, pk=region_id)
     context['issues'] = context['issues'].filter(region=context['active_item'])
-    context['active_nav'] = 'region'
     return context
-
-
-@login_required
-def open_issues_by_region(request, region_id):
-    return issues(request, issues_by_region(open_issues(), region_id))
-
-
-@login_required
-def closed_issues_by_region(request, region_id):
-    return issues(request, issues_by_region(closed_issues(), region_id))
-
-
-@login_required
-def closed_issues_by_region_period(request, region_id):
-    return issues_period(request, issues_by_region(closed_issues(), region_id))
 
 
 def issues_by_project(context, project_id):
     context['active_item'] = get_object_or_404(Project, pk=project_id)
     context['issues'] = context['issues'].filter(project=context['active_item'])
-    context['active_nav'] = 'project'
     return context
-
-
-@login_required
-def open_issues_by_project(request, project_id):
-    return issues(request, issues_by_project(open_issues(), project_id))
-
-
-@login_required
-def closed_issues_by_project(request, project_id):
-    return issues(request, issues_by_project(closed_issues(), project_id))
-
-
-@login_required
-def closed_issues_by_project_period(request, project_id):
-    return issues_period(request, issues_by_project(closed_issues(), project_id))
 
 
 def issues_by_service_type(context, service_type_id):
     context['active_item'] = get_object_or_404(ServiceType, pk=service_type_id)
     context['issues'] = context['issues'].filter(service_type=context['active_item'])
-    context['active_nav'] = 'service_type'
     return context
-
-
-@login_required
-def open_issues_by_service_type(request, service_type_id):
-    return issues(request, issues_by_service_type(open_issues(), service_type_id))
-
-
-@login_required
-def closed_issues_by_service_type(request, service_type_id):
-    return issues(request, issues_by_service_type(closed_issues(), service_type_id))
-
-
-@login_required
-def closed_issues_by_service_type_period(request, service_type_id):
-    return issues_period(request, issues_by_service_type(closed_issues(), service_type_id))
 
 
 def issues_by_assignee(context, assignee_id):
     context['active_item'] = get_object_or_404(User, pk=assignee_id)
     context['issues'] = context['issues'].filter(assignee=context['active_item'])
-    context['active_nav'] = 'user'
     return context
-
-
-@login_required
-def open_issues_by_assignee(request, assignee_id):
-    return issues(request, issues_by_assignee(open_issues(), assignee_id))
-
-
-@login_required
-def closed_issues_by_assignee(request, assignee_id):
-    return issues(request, issues_by_assignee(closed_issues(), assignee_id))
-
-
-@login_required
-def closed_issues_by_assignee_period(request, assignee_id):
-    return issues_period(request, issues_by_assignee(closed_issues(), assignee_id))
 
 
 @login_required
@@ -331,7 +270,7 @@ def row_for_export(issue_obj):
         issue_obj.service_type.name_short,
         issue_obj.report_description,
         issue_obj.report_solution,
-        issue_obj.created.date(),
+        issue_obj.opened,
         issue_obj.control,
         issue_obj.region.gu,
     ]
@@ -380,9 +319,10 @@ def export_issues(request, export_type, issue_list=None):
             wb.save(response)
             return response
         elif export_type == 'html':
-            return render(request, 'helpdesk/filter_printable.html', {'issues': issue_list})
-    else:
-        raise Http404
+            return render(request, 'helpdesk/filter_printable.html', {'issues': issue_list.order_by('created')})
+        else:
+            raise Http404
+    raise Http404
 
 
 @login_required
@@ -400,7 +340,7 @@ def filter_issues(request):
                    'component',
                    )
 
-    date_filters = ('created_start', 'created_end', 'control_start', 'control_end')
+    date_filters = ('opened_start', 'opened_end', 'control_start', 'control_end')
 
     m2m_filters = ('contracts',)
 
@@ -465,7 +405,8 @@ def new_issue(request):
             form = IssueForm(request.POST)
 
     else:
-        initial_data = {'control': date.today() + timedelta(days=7),
+        initial_data = {'opened': date.today(),
+                        'control': date.today() + timedelta(days=7),
                         'assignee': current_user.id,
                         'project': 1,
                         'service_type': 4,

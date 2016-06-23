@@ -156,3 +156,7 @@ body {
   color: #777;
 }
 
+.left_panel {
+  display: block;
+}
+

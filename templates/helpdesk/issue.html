@@ -271,6 +271,9 @@
 					<li class="list-group-item">
 						<p>Ответственный: {{ issue.assignee.first_name}} {{issue.assignee.last_name}}</p>
 						<p>Автор: {{ issue.creator.first_name}} {{issue.creator.last_name}}</p>
+					</li>
+					<li class="list-group-item">
+						<p>Открыт: {{ issue.opened }}</p>
 						<p><small>Создан: {{ issue.created }}</small></p>
 						{% ifnotequal issue.created|date:"dMYHis" issue.changed|date:"dMYHis" %}
 							<p><small>Изменен: {{ issue.changed }}</small></p>

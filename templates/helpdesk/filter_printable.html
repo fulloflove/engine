@@ -22,7 +22,7 @@
 				<th>Тип запроса</th>
 				<th>Описание</th>
 				<th>Решение</th>
-				<th>Создан</th>
+				<th>Открыт</th>
 				<th>Контроль</th>
 				<th>Регион</th>
 			</tr>
@@ -33,7 +33,7 @@
 				<td>{{ issue.service_type.name_short }}</td>
 				<td>{{ issue.report_description }}</td>
 				<td>{{ issue.report_solution }}</td>
-				<td>{{ issue.created|date:"d.m.Y"  }}</td>
+				<td>{{ issue.opened|date:"d.m.Y"  }}</td>
 				<td>{{ issue.control|date:"d.m.Y"  }}
 				<td>{{ issue.region.gu }}</td>
 			</tr>

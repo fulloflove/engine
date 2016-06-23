@@ -32,6 +32,15 @@
 				<li><a href="{% url 'helpdesk:index' %}{{ active_nav }}{% if active_nav != 'all' and active_nav != 'my' %}/{{ active_item.id }}{% endif %}/closed/period">За период</a></li>
 			</ul>
 		</li>
+		<li role="presentation" class="dropdown{% if status == "any" %} active{% endif %}">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#!" role="button" aria-expanded="false">
+				Любые <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu" role="menu">
+				<li><a href="{% url 'helpdesk:index' %}{{ active_nav }}{% if active_nav != 'all' and active_nav != 'my' %}/{{ active_item.id }}{% endif %}/any">Все</a></li>
+				<li><a href="{% url 'helpdesk:index' %}{{ active_nav }}{% if active_nav != 'all' and active_nav != 'my' %}/{{ active_item.id }}{% endif %}/any/period">За период</a></li>
+			</ul>
+		</li>
 	</ul>
     <!--<ul class="nav nav-tabs">
         <li role="presentation" class="active"><a href="#open" aria-controls="open" role="tab" data-toggle="tab">Открытые</a></li>
@@ -65,8 +74,8 @@
 				{% include "helpdesk/issues_table.html" %}
 
 			{% elif status == "open" %}<h4>Открытых запросов нет</h4>
-			{% elif status == "closed" and period_form.is_bound and not period_form.errors %}<h4>Ничего не найдено</h4>
-			{% elif status == "closed" and not period_form %}<h4>Закрытых запросов нет</h4>
+			{% elif period_form.is_bound and not period_form.errors %}<h4>Ничего не найдено</h4>
+			{% elif not period_form %}<h4>Запросов не найдено</h4>
 
 			{% endif %}
     </div>

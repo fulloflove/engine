@@ -25,7 +25,9 @@
 
             {% for result in page.object_list %}
                 <p>
-                    <a href="{% url 'helpdesk:issue' result.object.id %}">{{ result.object }}. {{ result.object.subject }}</a>
+		    {% if result.object %}
+                        <a href="{% url 'helpdesk:issue' result.object.id %}">{{ result.object }}. {{ result.object.subject }}</a>
+		    {% endif %}
                 </p>
             {% empty %}
                 <p>Ничего не найдено</p>

@@ -1,5 +1,15 @@
 $(document).ready(function(){
+    $(".select2").select2({
+        placeholder: "Выберите из списка",
+    });
     $('[data-toggle="popover"]').popover();
+    $('body').on('click', function (e) {
+        if ($(e.target).data('toggle') !== 'popover'
+            && $(e.target).parents('[data-toggle="popover"]').length === 0
+            && $(e.target).parents('.popover.in').length === 0) {
+            $('[data-toggle="popover"]').popover('hide');
+        }
+    });
     $('.autosizeable').autosize();
     $('body').on('click','.contact_picker',function(){
         $('#contact_name').text($(this).text());
