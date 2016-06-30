@@ -319,7 +319,7 @@ def export_issues(request, export_type, issue_list=None):
             wb.save(response)
             return response
         elif export_type == 'html':
-            return render(request, 'helpdesk/filter_printable.html', {'issues': issue_list.order_by('created')})
+            return render(request, 'helpdesk/filter_printable.html', {'issues': issue_list.order_by('opened')})
         else:
             raise Http404
     raise Http404
